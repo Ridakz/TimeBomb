@@ -32,9 +32,9 @@ void PlayWindow::initGame(const CardGame &cardGame, int myId) {
         yourTurn->setVisible(true);
     }
     for(int i = 0; i < 6; ++i) {
-        nicknames[i]->setStyleSheet("QLabel { color : black; }");
+        nicknames[i]->setStyleSheet(STYLE_USER);
     }
-    nicknames[cardGame.m_wireCutterId]->setStyleSheet("QLabel { color : red; }");
+    nicknames[cardGame.m_wireCutterId]->setStyleSheet(STYLE_CURRENT_USER);
 }
 
 void PlayWindow::setupCards() {
@@ -122,8 +122,8 @@ void PlayWindow::setupCards() {
     defusingNumber->setAlignment(Qt::AlignCenter);
     defusingNumber->setText("0");
     auto font = defusingNumber->font();
-    font.setBold(true);
-    font.setPointSize(16);
+    font.setFamily("Press Start 2P");
+    font.setPointSize(10);
     defusingNumber->setFont(font);
 
     yourTurn = new QLabel(centralWidget);
@@ -199,6 +199,7 @@ void PlayWindow::setupCards() {
     name->setMaximumSize(QSize(95, 24));
     name->setFont(font);
     name->setAlignment(Qt::AlignCenter);
+    name->setAutoFillBackground(true);
 
     infoLayout->addWidget(name, 0, Qt::AlignHCenter);
 
@@ -229,9 +230,9 @@ void PlayWindow::setupCards() {
     playerBomb->setFont(font);
     playerBomb->setAlignment(Qt::AlignCenter);
 
-    playerBomb->setStyleSheet("QLabel { color : red; }");
-    playerNeutrals->setStyleSheet("QLabel { color : peru; }");
-    playerDefusings->setStyleSheet("QLabel { color : blue; }");
+    playerBomb->setStyleSheet(STYLE_PLAYER_BOMB);
+    playerNeutrals->setStyleSheet(STYLE_PLAYER_NEUTRAL);
+    playerDefusings->setStyleSheet(STYLE_PLAYER_DEFUSER);
 
 
     countHLayout->addWidget(playerBomb);
@@ -255,17 +256,20 @@ void PlayWindow::setupCards() {
     formLayout->setContentsMargins(11, 11, 11, 11);
     formLayout->setObjectName(QString::fromUtf8("formLayout"));
     QFont font2;
-    font2.setPointSize(11);
+    font2.setFamily("Press Start 2P");
+    font2.setPointSize(10);
     font2.setBold(true);
-    font2.setWeight(75);
+    font2.setWeight(50);
 
     for(int i = 0; i< 6 ; ++i) {
         scores[i][0] = new QLabel(scoreList);
+        scores[i][0]->setStyleSheet(STYLE_SCORE);
         scores[i][0]->setFont(font2);
         scores[i][0]->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
         scores[i][0]->setText(nicknames[i]->text());
 
         scores[i][1] = new QLabel(scoreList);
+        scores[i][1]->setStyleSheet(STYLE_SCORE);
         scores[i][1]->setFont(font2);
         scores[i][1]->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
         scores[i][1]->setText("0");
@@ -289,8 +293,8 @@ void PlayWindow::showName(int id) {
 }
 
 void PlayWindow::switchCutter(int previous, int next) {
-    nicknames[next]->setStyleSheet("QLabel { color : red; }");
-    nicknames[previous]->setStyleSheet("QLabel { color : black; }");
+    nicknames[next]->setStyleSheet(STYLE_CURRENT_USER);
+    nicknames[previous]->setStyleSheet(STYLE_USER);
 }
 
 void PlayWindow::showSide(Side side) {

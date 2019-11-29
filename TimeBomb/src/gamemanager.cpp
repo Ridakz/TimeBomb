@@ -3,6 +3,7 @@
 #include "humanplayer.h"
 #include <iterator>
 #include <QMessageBox>
+#include <QDesktopWidget>
 
 GameManager::GameManager(int playerCount, PlayWindow *UI, ClientWindow* client) :
              QObject(), m_cardGame(playerCount), m_client(client), m_GUI(UI)
@@ -20,6 +21,19 @@ GameManager::GameManager(int playerCount, PlayWindow *UI) :
     m_players[0] = nullptr;
     m_client = nullptr;
     receiveGameInform(time(nullptr),1,0);
+    m_GUI->centralWidget->setStyleSheet(STYLE_BACKGROUND_IMG);
+    //todo : https://stackoverflow.com/questions/5513060/qt-4-move-window-without-title-bar
+    m_GUI->centralWidget->setWindowFlags(Qt::Window | Qt::FramelessWindowHint);
+    QDesktopWidget *desktop = QApplication::desktop();
+
+    int screenWidth = desktop->width();
+    int screenHeight = desktop->height();
+
+    int x = (screenWidth - WIDTH) / 2;
+    int y = (screenHeight - HEIGHT) / 2;
+
+    m_GUI->centralWidget->move( x, y );
+
     m_GUI->centralWidget->show();
 }
 

@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 //    clientUI->show();
 
     //local game
+    QFontDatabase::addApplicationFont(":/fonts/PressStart2P-Regular.ttf");
     PlayWindow * gameUI2 = new PlayWindow();
     GameManager gameManagerLocal(6,gameUI2);
     return a.exec();

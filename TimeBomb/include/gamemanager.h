@@ -36,6 +36,10 @@ public:
 
     void debugShowAll();
 
+    QString STYLE_BACKGROUND_IMG = "QWidget { background-color:black; }";
+    int WIDTH = 1174;
+    int HEIGHT = 693;
+
 virtual ~GameManager();
 
 

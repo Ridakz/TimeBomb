@@ -10,6 +10,7 @@ GameManager::GameManager(int playerCount, PlayWindow *UI, ClientWindow* client) 
     connectCardClickedSend();
     QObject::connect(client,&ClientWindow::receivedMove,this,&GameManager::applyMove);
     QObject::connect(client,&ClientWindow::receivedSizeAndIndex,this,&GameManager::receiveGameInform);
+    QObject::connect(client,&ClientWindow::receivedCursorPos,this,&GameManager::updateCursorPos);
     m_players[0] = nullptr;
 }
 
@@ -23,13 +24,35 @@ GameManager::GameManager(int playerCount, PlayWindow *UI) :
     m_GUI->centralWidget->show();
 }
 
+void GameManager::showToolTip() {
+    int T[3] = {0,0,0};
+    for(int i =0; i<6;++i) {
+        for(int j = 0; j < 6 - m_cardGame.m_roundNumber ; ++j) {
+            m_GUI->playerCards[i][j]->setToolTip(QString::number(m_cardGame.m_playerHands[i][j].m_value) + "  card#"
+                                                 + QString::number(m_GUI->playerCards[i][j]->m_card.cardIndex));
+            T[m_cardGame.m_playerHands[i][j].m_value]++;
+        }
+    }
+    qDebug() << "Bombs : " << T[1] << " Defusing " << T[2] + m_cardGame.m_defusedCard;
+}
+
 void GameManager::initGame() {
     m_cardGame.startGame();
     m_GUI->initGame(m_cardGame,m_id);
     showNextRound();
     m_isGamePaused = false;
+    showToolTip();
     m_players[m_cardGame.m_wireCutterId]->chooseMove(m_cardGame);
-    //debugShowAll();
+
+    if(m_id == m_cardGame.m_wireCutterId) {
+        m_GUI->wirePicture->setHidden(true);
+        m_GUI->wirePlayerName->setHidden(true);
+        m_GUI->centralWidget->setCursor(*m_GUI->wireCursor);
+    }
+    else {
+    }
+
+    m_GUI->wirePlayerName->setText(m_GUI->nicknames[m_cardGame.m_wireCutterId]->text());
 }
 
 void GameManager::addWinnerScore() {
@@ -48,21 +71,24 @@ void GameManager::showWinners() {
             terrorist[index++] = i;
         }
     }
-    QMessageBox msgBox ;
+
+    m_GUI->winnerMessage->show();
     if(m_cardGame.m_winner == Terrorist) {
-        msgBox.setText("<font color=\"red\">Terrorist Team Wins</font>\n<font color=\"black\">\nTerrorists : " +
-                       m_GUI->nicknames[terrorist[0]]->text() + " " + m_GUI->nicknames[terrorist[1]]->text() + " </font>");
+        m_GUI->winnerMessage->setText("<font color=\"red\">Terrorist Team Wins</font><br><font color=\"black\">\n "
+                                      "Terrorists : " + m_GUI->nicknames[terrorist[0]]->text() + " " + m_GUI->nicknames[terrorist[1]]->text() + " </font>");
     }
     else {
-        msgBox.setText("<font color=\"blue\">Sherlock Team Wins</font>\n<font color=\"black\">\nTerrorists : " +
+        m_GUI->winnerMessage->setText("<font color=\"blue\">Sherlock Team Wins</font><br><font color=\"black\">\nTerrorists : " +
                        m_GUI->nicknames[terrorist[0]]->text() + " " + m_GUI->nicknames[terrorist[1]]->text() + " </font>");
     }
-    msgBox.exec();
+    QTimer::singleShot(4000,this,[this]() {
+        m_GUI->winnerMessage->hide();
+    });
 }
 
 void GameManager::debugShowAll() {
     for(int i = 0; i < 6; ++i) {
-        for(int j = 0; j < 6-m_cardGame.m_roundNumber; ++j) {
+        for(int j = 0; j < 6 - m_cardGame.m_roundNumber; ++j) {
             m_GUI->playerCards[i][j]->setVisible(true);
             m_GUI->playerCards[i][j]->reveal(m_cardGame.m_playerHands[i][j].m_value);
         }
@@ -113,6 +139,11 @@ void GameManager::receiveGameInform(unsigned int seed, int clientCount, int clie
     m_GUI->centralWidget->show();
     m_GUI->showName(m_id);
     initGame();
+
+    QTimer* timedCursorUpdate = new QTimer();
+    QObject::connect(timedCursorUpdate,&QTimer::timeout,this,&GameManager::sendCursorPos);
+    timedCursorUpdate->setInterval(100);
+    timedCursorUpdate->start();
 }
 
 void GameManager::sendIfMyTurn(Move move) {
@@ -120,6 +151,24 @@ void GameManager::sendIfMyTurn(Move move) {
         qDebug() << "SENT: CARD";
         m_client->sendMove(move.playerId,move.cardIndex);
     }
+}
+
+void GameManager::sendCursorPos()
+{
+    bool isMyTurn = m_id == m_cardGame.m_wireCutterId;
+    int x = m_GUI->centralWidget->mapFromGlobal(this->m_GUI->wireCursor->pos()).x();
+    int y = m_GUI->centralWidget->mapFromGlobal(this->m_GUI->wireCursor->pos()).y();
+    if(isMyTurn && y >= 0 && x >= 0) {
+        m_client->sendCursorPosition(std::max(x-55,0),std::max(y-32,0));
+    }
+}
+
+void GameManager::updateCursorPos(int x, int y) {
+    m_GUI->wirePlayerName->setGeometry(x,y+40,100,50);
+   if(m_cardGame.m_wireCutterId != m_id) {
+       m_GUI->wirePicture->setHidden(false);
+       m_GUI->wirePicture->setGeometry(x,y,64,64);
+   }
 }
 
 void GameManager::updateScore() {
@@ -139,27 +188,42 @@ void GameManager::applyMove(Move move) {
     //debugShowAll();
     m_isGamePaused = true;
     m_GUI->switchCutter(m_cardGame.m_wireCutterId,move.playerId);
-    m_cardGame.applyMove(move);
     m_GUI->revealCard(move, m_cardGame.m_playerHands[move.playerId][move.cardIndex]);
+    m_cardGame.applyMove(move);
+    m_GUI->wirePlayerName->setText(m_GUI->nicknames[m_cardGame.m_wireCutterId]->text());
     m_GUI->updateDefusingNumber(m_cardGame.m_defusedCard);
+    m_GUI->yourTurn->setVisible(false);
+    m_GUI->centralWidget->setCursor(QCursor());
+    m_GUI->wirePlayerName->setHidden(false);
+
+
 
     // wait and start new game
     if(m_cardGame.m_isGameFinished) {
+        //debugShowAll();
         addWinnerScore();
         updateScore();
+        QApplication::processEvents();
+        QApplication::processEvents();
         showWinners();
         QTimer::singleShot(5000,this,[this](){initGame();});
         return;
     }
 
-    m_GUI->yourTurn->setVisible(false);
-    if(m_id == m_cardGame.m_wireCutterId) {
+
+    bool isMyTurn = m_id == m_cardGame.m_wireCutterId;
+    if(isMyTurn) {
+        m_GUI->wirePlayerName->setHidden(true);
         m_GUI->yourTurn->setVisible(true);
+        //QApplication::setOverrideCursor(*m_GUI->wireCursor);
+        m_GUI->centralWidget->setCursor(*m_GUI->wireCursor);
+        m_GUI->wirePicture->setHidden(true);
     }
 
     bool isEndOfRound = m_cardGame.m_cardPlayedCount == 0;
     if(isEndOfRound) {
         QTimer::singleShot(3000,this,[this](){
+            showToolTip();
             m_GUI->showNextRound(m_cardGame.m_roundNumber);
             showNextRound();
             m_GUI->turnNumber->setText("Turn " + QString::number(m_cardGame.m_cardPlayedCount+1) + "/" + QString::number(m_cardGame.m_playerCount));

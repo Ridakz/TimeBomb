@@ -60,12 +60,14 @@ public:
     QStatusBar *statusBar;
     QLabel *defusingImage, *defusingNumber;
     QLabel* yourTurn;
+    QLabel* winnerMessage;
     QLabel* playerNeutrals, *playerDefusings,*playerBomb;
     QLabel* name;
     QLabel* sideLabel;
     QLabel* nicknames[6];
     QLabel* scores[6][2];
     QPalette palette;
+
 
     QLabel* gameNumber;
     QLabel* turnNumber;
@@ -74,10 +76,13 @@ public:
     QGroupBox *scoreList;
     QFormLayout* formLayout;
 
+    // invisible cursor + wire picture when its not client turn
+    QLabel*  wirePicture;
+    QLabel*  wirePlayerName;
+    QCursor* invisibleCursor;
 
-
-
-
+    // real wire cursor used when its client turn
+    QCursor* wireCursor;
 };
 
 #endif // PLAYWINDOW_H

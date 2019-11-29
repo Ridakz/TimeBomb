@@ -2,7 +2,7 @@
 
 Card::Card(Card::CardValue v) : m_value(v), m_isRevealed(false) {}
 
-Card::Card(const Card &card) : m_value(card.m_value), m_isRevealed(false) {}
+Card::Card(const Card &card) : m_value(card.m_value), m_isRevealed(card.m_isRevealed) {}
 
 bool Card::operator==(const Card &c) {
     return m_value == c.m_value;

@@ -34,19 +34,26 @@ public:
     void connectCardClickedSend();
     void connectCardClickedApply();
 
-    void debugShowAll();
+    void debugShowAll();    
+    void showToolTip();
+
 
 virtual ~GameManager();
 
 
 public slots:
+    void sendIfMyTurn(Move move);
+
+    void updateCursorPos(int x, int y);
+
     void showNextRound();
 
     void receiveGameInform(unsigned int seed, int clientCount, int clientId);
 
-    void sendIfMyTurn(Move move);
 
     void applyMove (Move move);
+
+    void sendCursorPos();
 
 private:
     Player* m_players[8];

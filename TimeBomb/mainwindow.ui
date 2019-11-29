@@ -897,7 +897,7 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>500</x>
@@ -1038,6 +1038,20 @@
       </layout>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>300</x>
+      <y>280</y>
+      <width>111</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>IDINAHUDDDDDDDDDDDDDD
+ dazdaz</string>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

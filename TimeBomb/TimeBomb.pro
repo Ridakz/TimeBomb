@@ -27,6 +27,7 @@ CONFIG += c++11
 INCLUDEPATH += $$PWD/include/
 
 SOURCES += \
+    include/UI/customwidget.cpp \
     src/Model/card.cpp \
     src/Model/cardgame.cpp \
     src/Model/deck.cpp \
@@ -48,6 +49,7 @@ HEADERS += \
     include/Model/move.h \
     include/Model/side.h \
     include/UI/clientwindow.h \
+    include/UI/customwidget.h \
     include/UI/playercard.h \
     include/UI/playwindow.h \
     include/UI/ui_client.h \

@@ -5,7 +5,7 @@ ClientWindow::ClientWindow(PlayWindow* p) : m_pw(p)
     setupUi(this);
     m_socket = new QTcpSocket(this);
 
-    QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(donneesRecues()));
+    QObject::connect(m_socket, SIGNAL(readyRead()), this, SLOT(readReceivedData()));
     QObject::connect(m_socket, SIGNAL(connected()), this, SLOT(connect()));
     QObject::connect(m_socket, SIGNAL(disconnected()), this, SLOT(disconnect()));
     QObject::connect(m_socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
@@ -27,7 +27,15 @@ void ClientWindow::sendMove(int playerId, int cardId)
     m_socket->write(paquet);
 }
 
-void ClientWindow::donneesRecues()
+void ClientWindow::sendCursorPosition(int x, int y)
+{
+    QByteArray paquet;
+    QDataStream out(&paquet, QIODevice::WriteOnly);
+    out << (int) -1 << (int) x << (int) y;
+    m_socket->write(paquet);
+}
+
+void ClientWindow::readReceivedData()
 {
     QDataStream in(m_socket);
 
@@ -40,13 +48,15 @@ void ClientWindow::donneesRecues()
     in >> c;
 
     QString receivedMsg = "Rcv " + QString::number(a)  + " " + QString::number(b) + " " + QString::number(c) ;
-
     messageList->append(receivedMsg);
 
     if(c == -1) {
         emit receivedMove(Move{a,b});
     }
-    else {
+    else if (a == -1) {
+        emit receivedCursorPos(b,c);
+    }
+    else{
         emit receivedSizeAndIndex(static_cast<unsigned int>(a),b,c);
     }
 }

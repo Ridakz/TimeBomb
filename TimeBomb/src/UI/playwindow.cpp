@@ -1,5 +1,5 @@
 #include "UI/playwindow.h"
-
+#include "UI/customwidget.h"
 
 PlayWindow::PlayWindow()  {
     setupCards();
@@ -23,10 +23,10 @@ void PlayWindow::initGame(const CardGame &cardGame, int myId) {
     showCards();
 
 
-
     this->gameNumber->setText("Game " + QString::number(cardGame.m_matchNumber));
     defusingNumber->setText("0");
     turnNumber->setText("Turn 1");
+    roundNumber->setText("Round 1/4");
 
     if(myId == cardGame.m_wireCutterId) {
         yourTurn->setVisible(true);
@@ -45,7 +45,9 @@ void PlayWindow::setupCards() {
     QIcon ButtonIcon2(pixmap2);
     QIcon ButtonIcon(pixmap);
 
-    centralWidget = new QWidget();
+    centralWidget = new CustomWidget();
+    centralWidget->setMouseTracking(true);
+
     name = new QLabel(centralWidget);
 
     for(int i = 0; i < 5 ;++i) {
@@ -273,7 +275,29 @@ void PlayWindow::setupCards() {
         formLayout->setWidget(i, QFormLayout::FieldRole, scores[i][1]);
     }
 
+    QPixmap wire (":/Pictures/WireCutter2.png");
+    wirePicture = new QLabel(centralWidget);
+    wire = wire.scaled(64,64);
+    wirePicture->setPixmap(wire);
+    wirePicture->setGeometry(QCursor::pos().x(),QCursor::pos().y(),64,64);
+    wirePicture->setHidden(true);
 
+    wireCursor = new QCursor (wire,55,32);
+
+    wirePlayerName = new QLabel(centralWidget);
+    font1.setBold(true); font1.setPointSize(14);
+    wirePlayerName->setFont(font1);
+
+    winnerMessage = new QLabel(centralWidget);
+    font1.setPointSize(12);
+    winnerMessage->setFont(font1);
+    winnerMessage->setGeometry(QRect(180, 250, 200, 71));
+
+    //centralWidget->setCursor(*wireCursor);
+    centralWidget->setEnabled(true);
+
+
+    //QApplication::setOverrideCursor(*wireCursor);
 }
 
 void PlayWindow::showName(int id) {
@@ -334,4 +358,5 @@ void PlayWindow::showNextRound(int roundNumber) {
 
 PlayWindow::~PlayWindow() {
     delete centralWidget;
+    delete wireCursor;
 }

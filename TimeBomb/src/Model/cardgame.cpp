@@ -2,8 +2,6 @@
 #include <random>
 #include <assert.h>
 
-
-
 CardGame::CardGame(int playerCount) : m_playerCount (playerCount) {
     assert( playerCount >= minPlayers && playerCount <= maxPlayers );
 }
@@ -113,13 +111,14 @@ void CardGame::applyMove(Move move) {
 
     bool isEndOfRound = m_cardPlayedCount == m_playerCount;
     if(isEndOfRound) {
-        ++m_roundNumber;
-        bool isLastRound = m_roundNumber == 5;
+        bool isLastRound = m_roundNumber == 4;
         if(isLastRound) {
             m_isGameFinished = true;
             m_winner = Terrorist;
+            return;
         }
         else { // next round
+            ++m_roundNumber;
             dealCards();
             m_cardPlayedCount = 0;
         }

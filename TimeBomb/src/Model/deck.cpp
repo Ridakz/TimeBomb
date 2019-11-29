@@ -26,6 +26,12 @@ void Deck::shuffle() {
 
 void Deck::remove(Card c) {
     cards.erase(std::find(cards.begin(),cards.end(),c));
+//    for(int i = 0; i < cards.size() ; ++i) {
+//        if(c.m_value == cards[i].m_value) {
+//            cards.erase(cards.begin() + i);
+//            return;
+//        }
+//    }
 }
 
 

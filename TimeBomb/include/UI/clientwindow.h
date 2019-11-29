@@ -14,14 +14,17 @@ class ClientWindow : public QWidget, private Ui_FenClient
     public:
         ClientWindow(PlayWindow * p);
         virtual ~ClientWindow();
-        signals:
+
+   signals:
         void receivedMove(Move move);
         void receivedSizeAndIndex(unsigned int seed, int playerCount, int index);
+        void receivedCursorPos(int x, int y);
 
     public slots:
         void sendMove(int playerId, int cardId);
+        void sendCursorPosition(int x, int y);
         void on_connectButton_clicked();
-        void donneesRecues();
+        void readReceivedData();
         void connect();
         void disconnect();
         void socketError(QAbstractSocket::SocketError erreur);

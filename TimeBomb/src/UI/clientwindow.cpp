@@ -1,6 +1,6 @@
 #include "UI/clientwindow.h"
 
-ClientWindow::ClientWindow(PlayWindow* p) : m_pw(p)
+ClientWindow::ClientWindow()
 {
     setupUi(this);
     m_socket = new QTcpSocket(this);

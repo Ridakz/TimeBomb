@@ -3,7 +3,7 @@
 #include <assert.h>
 
 CardGame::CardGame(int playerCount) : m_playerCount (playerCount) {
-    assert( playerCount >= minPlayers && playerCount <= maxPlayers );
+    //assert( playerCount >= minPlayers && playerCount <= maxPlayers );
 }
 
 void CardGame::startGame() {

@@ -12,9 +12,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
       // Network game
-    PlayWindow * gameUI = new PlayWindow();
-    ClientWindow* clientUI = new ClientWindow(gameUI);
-    GameManager gameManagerNetwork(6,gameUI, clientUI);
+    ClientWindow* clientUI = new ClientWindow();
+    GameManager gameManagerNetwork(clientUI);
     clientUI->show();
 
     //local game

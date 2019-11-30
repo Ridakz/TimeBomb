@@ -12,7 +12,7 @@ class ClientWindow : public QWidget, private Ui_FenClient
     Q_OBJECT
 
     public:
-        ClientWindow(PlayWindow * p);
+        ClientWindow();
         virtual ~ClientWindow();
 
    signals:
@@ -31,6 +31,5 @@ class ClientWindow : public QWidget, private Ui_FenClient
 
     public:
         QTcpSocket *m_socket;
-        PlayWindow* m_pw;
 };
 #endif // CLIENTWINDOWW_H

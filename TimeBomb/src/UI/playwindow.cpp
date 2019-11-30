@@ -1,8 +1,15 @@
 #include "UI/playwindow.h"
 #include "UI/customwidget.h"
 
-PlayWindow::PlayWindow()  {
+PlayWindow::PlayWindow(int playerCount) : m_playerCount(playerCount) {
     setupCards();
+
+    for(int i = m_playerCount; i < 6 ; ++i) {
+        nicknames[i]->setVisible(false);
+        for(int j = 0; j < 5 ; ++j) {
+            playerCards[i][j]->setVisible(false);
+        }
+    }
 }
 
 void PlayWindow::revealCard(Move card, Card c) {
@@ -31,7 +38,7 @@ void PlayWindow::initGame(const CardGame &cardGame, int myId) {
     if(myId == cardGame.m_wireCutterId) {
         yourTurn->setVisible(true);
     }
-    for(int i = 0; i < 6; ++i) {
+    for(int i = 0; i < m_playerCount; ++i) {
         nicknames[i]->setStyleSheet("QLabel { color : black; }");
     }
     nicknames[cardGame.m_wireCutterId]->setStyleSheet("QLabel { color : red; }");
@@ -98,7 +105,7 @@ void PlayWindow::setupCards() {
         playerCards[5][i]->setIconSize(pixmap2.rect().size());
     }
 
-    for(int i = 0; i < 6 ; ++i) {
+    for(int i = 0; i < m_playerCount ; ++i) {
         auto geo0 = playerCards[i][0]->geometry();
         auto geo2 = playerCards[i][2]->geometry();
         auto geo3 = playerCards[i][3]->geometry();
@@ -261,7 +268,7 @@ void PlayWindow::setupCards() {
     font2.setBold(true);
     font2.setWeight(75);
 
-    for(int i = 0; i< 6 ; ++i) {
+    for(int i = 0; i< m_playerCount ; ++i) {
         scores[i][0] = new QLabel(scoreList);
         scores[i][0]->setFont(font2);
         scores[i][0]->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
@@ -335,7 +342,7 @@ void PlayWindow::showCardNumber(int neutrals, int defusing, int bomb) {
 }
 
 void PlayWindow::showCards() {
-    for(int i = 0; i < 6; ++i) {
+    for(int i = 0; i < m_playerCount; ++i) {
         for(int j = 0; j < 5; ++j) {
             playerCards[i][j]->setVisible(true);
             playerCards[i][j]->hide();
@@ -348,7 +355,7 @@ void PlayWindow::showNextRound(int roundNumber) {
 
     this->roundNumber->setText("Round "+ QString::number(roundNumber) + "/4");
 
-    for(int i = 0; i < 6; ++i) {
+    for(int i = 0; i < m_playerCount; ++i) {
         for(int j = 0; j < 6-roundNumber; ++j) {
             playerCards[i][j]->hide();
         }

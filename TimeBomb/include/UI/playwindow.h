@@ -24,10 +24,9 @@
 class PlayWindow
 {
 
-
 public:
 
-    PlayWindow();
+    PlayWindow(int playerCount);
 
     void revealCard (Move card, Card c);
 
@@ -52,6 +51,8 @@ public:
     void showNextRound(int roundNumber);
 
     virtual ~PlayWindow();
+
+    int m_playerCount;
 
     PlayerCard* playerCards [6][5];
     QWidget *centralWidget;

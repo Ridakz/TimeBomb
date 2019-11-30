@@ -18,8 +18,9 @@ class GameManager : public QObject {
 public:
     GameManager();
 
-    GameManager(int playerCount, PlayWindow* UI, ClientWindow* client);
-    GameManager(int playerCount, PlayWindow* UI);
+    GameManager(int playerCount);
+    GameManager(ClientWindow *client);
+
 
 
     void initGame();
@@ -57,7 +58,7 @@ public slots:
 
 private:
     Player* m_players[8];
-    CardGame m_cardGame;
+    CardGame *m_cardGame;
     PlayWindow * m_GUI;
     ClientWindow* m_client;
     bool m_isGamePaused = false;

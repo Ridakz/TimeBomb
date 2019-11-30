@@ -7,5 +7,8 @@
         <file>Pictures/Neutral.png</file>
         <file>Pictures/background.png</file>
         <file>fonts/PressStart2P-Regular.ttf</file>
+        <file>sounds/37786__the-bizniss__pliers.wav</file>
+        <file>sounds/487724__mattix__ticking-timer-10-sec.wav</file>
+        <file>sounds/156031__iwiploppenisse__explosion.wav</file>
     </qresource>
 </RCC>

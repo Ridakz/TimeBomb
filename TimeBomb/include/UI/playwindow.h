@@ -74,7 +74,12 @@ public:
     QGroupBox *scoreList;
     QFormLayout* formLayout;
 
-
+    QString STYLE_CURRENT_USER = "QLabel { color : rgba(0,0,255,0.7); border: 1px solid rgba(100, 100, 100, 1); border-radius: 4px; }";
+    QString STYLE_USER = "QLabel { color : white; }";
+    QString STYLE_SCORE = "QLabel { color : white; }";
+    QString STYLE_PLAYER_BOMB = "QLabel { color : red; }";
+    QString STYLE_PLAYER_NEUTRAL = "QLabel { color : peru; }";
+    QString STYLE_PLAYER_DEFUSER = "QLabel { color : blue; }";
 
 
 

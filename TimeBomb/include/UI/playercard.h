@@ -28,8 +28,11 @@ public:
     PlayerCard(QWidget* widget, Move m, int rot);
 
     void mousePressEvent(QMouseEvent *e);
+    void enterEvent(QEvent *event);
+    void leaveEvent(QEvent *event);
 
     void hide();
+    void hover();
 
     void reveal(Card c);
 
@@ -37,6 +40,8 @@ public:
 
 signals :
     void cardClicked(Move card);
+    void cardOnEnter(Move card);
+    void cardOnLeave(Move card);
 
 };
 

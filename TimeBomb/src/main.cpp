@@ -12,12 +12,12 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
       // Network game
-//    ClientWindow* clientUI = new ClientWindow();
-//    GameManager gameManagerNetwork(clientUI);
-//    clientUI->show();
+    ClientWindow* clientUI = new ClientWindow();
+    GameManager gameManagerNetwork(clientUI);
+    clientUI->show();
 
     //local game
-    GameManager gameManagerLocal(6);
+    //GameManager gameManagerLocal(6);
 
    return a.exec();
 }

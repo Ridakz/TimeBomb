@@ -16,6 +16,7 @@ GameManager::GameManager(ClientWindow* client) :
 GameManager::GameManager(int playerCount) :
              QObject(), m_cardGame(new CardGame(playerCount)), m_GUI(new PlayWindow(playerCount))
 {
+    connectCardHover();
     connectCardClickedApply();
     m_players[0] = new HumanPlayer(0);
     m_client = nullptr;
@@ -126,6 +127,15 @@ void GameManager::connectCardClickedSend() {
     }
 }
 
+void GameManager::connectCardHover() {
+    for(int i= 0; i< m_cardGame->m_playerCount; ++i) {
+        for(int k = 0; k < 5; ++k) {
+            QObject::connect(m_GUI->playerCards[i][k],&PlayerCard::cardOnEnter,this,&GameManager::cardEntered);
+            QObject::connect(m_GUI->playerCards[i][k],&PlayerCard::cardOnLeave,this,&GameManager::cardLeft);
+        }
+    }
+}
+
 void GameManager::showNextRound() {
     int cardCount[3];
     m_cardGame->cardsCount(m_id,cardCount);
@@ -143,6 +153,8 @@ void GameManager::receiveGameInform(unsigned int seed, int clientCount, int clie
     int playerCount = std::max(clientCount,4);
     m_cardGame = new CardGame(playerCount);
     m_GUI = new PlayWindow(playerCount);
+    connectCardHover();
+
 
     connectCardClickedSend();
     for (int i = clientCount; i < 4; ++i) {
@@ -161,6 +173,18 @@ void GameManager::receiveGameInform(unsigned int seed, int clientCount, int clie
     QObject::connect(timedCursorUpdate,&QTimer::timeout,this,&GameManager::sendCursorPos);
     timedCursorUpdate->setInterval(100);
     timedCursorUpdate->start();
+}
+
+void GameManager::cardEntered(Move move) {
+    if(!m_cardGame->m_playerHands[move.playerId][move.cardIndex].m_isRevealed) {
+        m_GUI->playerCards[move.playerId][move.cardIndex]->hover();
+    }
+}
+
+void GameManager::cardLeft(Move move) {
+    if(!m_cardGame->m_playerHands[move.playerId][move.cardIndex].m_isRevealed) {
+        m_GUI->playerCards[move.playerId][move.cardIndex]->hide();
+    }
 }
 
 void GameManager::sendIfMyTurn(Move move) {

@@ -56,6 +56,10 @@ public slots:
 
     void sendCursorPos();
 
+    void cardEntered(Move move);
+    void cardLeft(Move move);
+    void connectCardHover();
+
 private:
     Player* m_players[8];
     CardGame *m_cardGame;

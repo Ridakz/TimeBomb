@@ -282,14 +282,16 @@ void PlayWindow::setupCards() {
         formLayout->setWidget(i, QFormLayout::FieldRole, scores[i][1]);
     }
 
-    QPixmap wire (":/Pictures/WireCutter2.png");
-    wirePicture = new QLabel(centralWidget);
+    QPixmap wire (":/Pictures/WireCutter2.png"), wireSelected(":/Pictures/WireCutterSelected2.png");
     wire = wire.scaled(64,64);
+    wireSelected = wireSelected.scaled(64,64);
+
+    wirePicture = new QLabel(centralWidget);
     wirePicture->setPixmap(wire);
     wirePicture->setGeometry(QCursor::pos().x(),QCursor::pos().y(),64,64);
     wirePicture->setHidden(true);
 
-    wireCursor = new QCursor (wire,55,32);
+    wireCursor = new QCursor (wireSelected,55,32);
 
     wirePlayerName = new QLabel(centralWidget);
     font1.setBold(true); font1.setPointSize(14);

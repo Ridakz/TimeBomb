@@ -8,11 +8,30 @@ void PlayerCard::mousePressEvent(QMouseEvent *e) {
     emit cardClicked(m_card);
 }
 
+void PlayerCard::enterEvent(QEvent *event)
+{
+   emit cardOnEnter (m_card);
+}
+
+void PlayerCard::leaveEvent(QEvent *event)
+{
+  emit cardOnLeave (m_card);
+}
+
 void PlayerCard::hide() {
     QPixmap pixmap;
     QMatrix rot;
     rot.rotate(m_rotation);
     pixmap.load(":/Pictures/Hidden.png");
+    pixmap = pixmap.transformed(rot);
+    setIcon(QIcon(pixmap));
+}
+
+void PlayerCard::hover() {
+    QPixmap pixmap;
+    QMatrix rot;
+    rot.rotate(m_rotation);
+    pixmap.load(":/Pictures/HiddenHovered2.png");
     pixmap = pixmap.transformed(rot);
     setIcon(QIcon(pixmap));
 }

@@ -4,8 +4,11 @@
         <file>Pictures/Bomb.png</file>
         <file>Pictures/Defusing.png</file>
         <file>Pictures/Hidden.png</file>
+	    <file>Pictures/HiddenHovered2.png</file>
         <file>Pictures/Neutral.png</file>
         <file>Pictures/WireCutter.jpg</file>
         <file>Pictures/WireCutter2.png</file>
+		<file>Pictures/WireCutterSelected.png</file>
+	    <file>Pictures/WireCutterSelected2.png</file>
     </qresource>
 </RCC>

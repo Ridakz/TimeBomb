@@ -84,7 +84,6 @@ void CardGame::cardsCount(int playerId, int cards[]) {
     cards[2] = bomb;
 }
 
-
 void CardGame::applyMove(Move move) {
 
     Card& card =  m_playerHands[move.playerId][move.cardIndex];

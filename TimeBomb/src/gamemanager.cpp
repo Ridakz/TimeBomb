@@ -17,12 +17,22 @@ GameManager::GameManager(int playerCount) :
              QObject(), m_cardGame(new CardGame(playerCount)), m_GUI(new PlayWindow(playerCount))
 {
     connectCardClickedApply();
-    m_players[0] = nullptr;
+    m_players[0] = new HumanPlayer(0);
     m_client = nullptr;
-    receiveGameInform(time(nullptr),1,0);
-    m_GUI->centralWidget->show();
-}
 
+    srand(time(nullptr));
+    m_id = 0;
+
+    for (int i = 1; i < playerCount; ++i) {
+        BotPlayer * bot = new BotPlayer(i);
+        m_players[i] = bot;
+        QObject::connect(bot,&BotPlayer::botPlayed,this,&GameManager::applyMove);
+    }
+
+    m_GUI->centralWidget->show();
+    m_GUI->showName(m_id);
+    initGame();
+}
 
 void GameManager::showToolTip() {
     int T[3] = {0,0,0};
@@ -48,6 +58,7 @@ void GameManager::initGame() {
         m_GUI->wirePicture->setHidden(true);
         m_GUI->wirePlayerName->setHidden(true);
         m_GUI->centralWidget->setCursor(*m_GUI->wireCursor);
+        m_GUI->yourTurn->setVisible(true);
     }
     else {
     }
